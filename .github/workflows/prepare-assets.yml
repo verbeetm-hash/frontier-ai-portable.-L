@@ -1,0 +1,30 @@
+name: Prepare wllama assets
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prepare-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch pinned official wllama 3.8.1
+        run: |
+          npm pack @wllama/wllama@3.8.1
+          mkdir -p _package
+          tar -xzf wllama-wllama-3.8.1.tgz -C _package
+          mkdir -p esm/wasm
+          cp _package/package/esm/index.js esm/index.js
+          cp _package/package/esm/wasm/wllama.wasm esm/wasm/wllama.wasm
+          test -s esm/index.js
+          test -s esm/wasm/wllama.wasm
+      - name: Commit engine assets
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add esm/index.js esm/wasm/wllama.wasm
+          git diff --cached --quiet || (git commit -m "Add pinned wllama 3.8.1 browser engine" && git push)
