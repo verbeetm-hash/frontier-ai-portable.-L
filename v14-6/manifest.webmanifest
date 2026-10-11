@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Frontier AI Portable V14.6 Canary",
+  "short_name": "Frontier V14.6",
+  "description": "Lokale AI in Android Chrome. GGUF blijft op het toestel.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101a2a",
+  "theme_color": "#101a2a",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
