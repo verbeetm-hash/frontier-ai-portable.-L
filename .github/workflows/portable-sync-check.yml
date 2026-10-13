@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in v14-6/index.html v14-6/sw.js v14-6/manifest.webmanifest v14-6/maximum-assurance-gate.js v14-6/maximum-assurance-protocol.txt v14-6/esm/index.js v14-6/esm/wasm/wllama.wasm; do
+          for file in v14-6/index.html v14-6/sw.js v14-6/manifest.webmanifest v14-6/maximum-assurance-gate.js v14-6/maximum-assurance-protocol.txt esm/index.js esm/wasm/wllama.wasm; do
             test -s "$file" || { echo "HOLD: missing/empty $file"; exit 1; }
           done
           python3 - <<'PY'
@@ -42,6 +42,7 @@ jobs:
           import hashlib,json,pathlib,zipfile
           root=pathlib.Path('v14-6')
           files=sorted(p for p in root.rglob('*') if p.is_file())
+          files+=sorted(p for p in pathlib.Path('esm').rglob('*') if p.is_file())
           assert files, 'HOLD: no candidate source'
           manifest={'status':'CANDIDATE_ONLY_NOT_RUNTIME_VERIFIED','files':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
           pathlib.Path('dist/SHA256_MANIFEST.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
