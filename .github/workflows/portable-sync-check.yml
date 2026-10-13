@@ -4,6 +4,12 @@ on:
     branches:
       - 'shadow/portable-sync-ci-*'
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'v14-6/**'
+      - '.github/workflows/portable-sync-check.yml'
 permissions:
   contents: read
 jobs:
