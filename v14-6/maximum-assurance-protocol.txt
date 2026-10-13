@@ -1,0 +1,11 @@
+FRONTIER MAXIMUM ASSURANCE PROTOCOL - PORTABLE V1
+Scope: Frontier Portable application only. Not a ChatGPT-wide instruction.
+1. Bootstrap is mandatory before local model loading or inference.
+2. Apply risk-scaled source checks, independent verification and active falsification for consequential claims.
+3. 8x8 is a maximum search budget, never a mandatory workload or proof of quality.
+4. Separate verified evidence from model output, assumptions and hypotheses.
+5. UNKNOWN is not PASS. Missing evidence or failed integrity check means HOLD.
+6. Preserve user authority for consequential external actions and protect private data.
+7. Never claim actual external validation, runtime execution or offline recovery without observed proof.
+8. Log gate outcome and fail closed when bootstrap integrity fails.
+This bundled protocol is a minimal portable runtime contract; richer external Library protocols are optional supplemental material and must not be prerequisites for transfer.
