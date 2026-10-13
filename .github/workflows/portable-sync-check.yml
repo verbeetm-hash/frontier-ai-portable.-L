@@ -1,0 +1,56 @@
+name: Frontier portable candidate integrity
+on:
+  push:
+    branches:
+      - 'shadow/portable-sync-ci-*'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify mandatory portable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in v14-6/index.html v14-6/sw.js v14-6/manifest.webmanifest v14-6/maximum-assurance-gate.js v14-6/maximum-assurance-protocol.txt v14-6/esm/index.js v14-6/esm/wasm/wllama.wasm; do
+            test -s "$file" || { echo "HOLD: missing/empty $file"; exit 1; }
+          done
+          python3 - <<'PY'
+          import hashlib,re,pathlib
+          gate=pathlib.Path('v14-6/maximum-assurance-gate.js').read_text()
+          protocol=pathlib.Path('v14-6/maximum-assurance-protocol.txt').read_bytes()
+          match=re.search(r"ASSURANCE_SHA256\s*=\s*['\"]([0-9a-f]{64})['\"]",gate)
+          assert match, "HOLD: pinned protocol digest missing"
+          assert hashlib.sha256(protocol).hexdigest()==match.group(1), "HOLD: protocol digest mismatch"
+          print("PASS: mandatory source and pinned protocol digest")
+          PY
+      - name: Package candidate with reproducible manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          python3 - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path('v14-6')
+          files=sorted(p for p in root.rglob('*') if p.is_file())
+          assert files, 'HOLD: no candidate source'
+          manifest={'status':'CANDIDATE_ONLY_NOT_RUNTIME_VERIFIED','files':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
+          pathlib.Path('dist/SHA256_MANIFEST.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          with zipfile.ZipFile('dist/FRONTIER_V14_6_CANDIDATE.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for p in files:z.write(p,str(p))
+            z.write('dist/SHA256_MANIFEST.json','SHA256_MANIFEST.json')
+          with zipfile.ZipFile('dist/FRONTIER_V14_6_CANDIDATE.zip') as z:
+            assert z.testzip() is None
+            for name,digest in manifest['files'].items():
+              assert hashlib.sha256(z.read(name)).hexdigest()==digest
+          print('PASS: ZIP CRC and manifest readback')
+          PY
+          sha256sum dist/FRONTIER_V14_6_CANDIDATE.zip > dist/ZIP_SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontier-v14-6-candidate
+          path: dist/
+          retention-days: 14
