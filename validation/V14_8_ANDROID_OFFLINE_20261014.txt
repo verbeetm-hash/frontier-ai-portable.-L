@@ -1,0 +1,16 @@
+FRONTIER AI PORTABLE - V14.8 OFFLINE ANDROID INTEGRATION RECORD
+Date: 2026-10-14
+Classification: SHADOW CANDIDATE; NOT PRODUCTION
+Protected main: 3834e829a555ede42c30aed7dbee8b6c5d8a2dac
+Candidate: FRONTIER_V14_8_OFFLINE_FIX_TEST.zip
+Candidate SHA256: 9307829e28ec4c3fde2c17c9f7674d14e8b4228949ebf997b3b5d00e7914db17
+Local manifest: 31 file hashes matched; ZIP CRC verified.
+User Android evidence: service worker active; cache complete; offline page restart PASS; locally selected Qwen GGUF generated 42 for 17+25 while airplane mode enabled.
+Limitations: not every button empirically tested; model session status mismatch in screenshot; persistent storage false; long-term retention, repeated prompts, independent device and deployment integrity not verified.
+Online review 2026-10-14: Google web.dev PWA caching and offline storage guidance confirms cached assets and storage persistence are separate; Chrome can deny persist() and evict best-effort storage. Cloudflare Direct Upload supports prebuilt static files without Git integration.
+References:
+https://web.dev/learn/pwa/offline-data
+https://web.dev/learn/pwa/caching
+https://developers.cloudflare.com/pages/get-started/direct-upload/
+Integration decision: record V14.8 as SHADOW offline candidate in Frontier AI Portable. Preserve V14.6 and protected main. Do not merge or deploy from GitHub; do not trigger Actions.
+Next tests: button matrix (cache, persist, install, offline restart, model load, generate), two different prompts per load, clean browser profile, offline reboot, failure handling, compare deployment hashes.
