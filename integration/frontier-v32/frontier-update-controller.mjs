@@ -7,7 +7,7 @@ const button=document.querySelector('#frontier-v32-check-update');
 function report(message){if(status)status.textContent=message;}
 async function check(){
  if(!TRUSTED_RELEASE_KEY||!UPDATE_MANIFEST_URL){report('HOLD: productiesleutel of manifest ontbreekt; huidige versie blijft intact');return;}
- try {const r=await checkAndInstall();report('Update geverifieerd: '+r.status+' '+r.version+'; herstart app om te activeren');}
+ try {const r=await checkAndInstall();report('Release cryptografisch gecontroleerd en gestaged: '+r.status+' '+r.version+'. Activatie vereist een apart geteste Service Worker-switch.');}
  catch(e){report('HOLD: '+String(e.message||e));}
 }
 if(button)button.addEventListener('click',check);
