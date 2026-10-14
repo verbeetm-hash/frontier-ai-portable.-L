@@ -1,0 +1,8 @@
+FRONTIER V14.9 SHADOW REGRESSION GATES - 2026-10-14
+R1 package integrity: SHA256, ZIP CRC, duplicate paths, path traversal. Automated script validation/frontier_zip_static_check.py. Baseline V14.6 available locally passed CRC, duplicates, path traversal; V14.8 original archive not available in this execution, do not assert retest.
+R2 model lifecycle: select GGUF; load; generate prompt A; generate prompt B; reselect same model; load another model; memory release; recover from invalid GGUF. PASS only with device/browser evidence.
+R3 offline proof: open online once; record SW controlled state; disable all network; terminate browser process; launch exact URL via Chrome history or installed PWA; capture new navigation and offline resource delivery; load locally saved GGUF and generate response. navigator.onLine alone is insufficient.
+R4 persistence: request navigator.storage.persist(); report boolean; verify storage. If false, label as best-effort cache, not permanent offline guarantee.
+R5 failure recovery: simulate missing model, corrupted GGUF, low-memory and network reconnect; ensure no stale success labels.
+R6 release gate: compare deployed bytes and candidate manifest; repeat Android and one independent browser. No promotion if any blocking regression.
+Do not alter protected main or V14.6. No GitHub Actions. Candidate remains shadow until gates R2-R6 are proven.
