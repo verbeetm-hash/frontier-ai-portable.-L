@@ -23,7 +23,7 @@ export async function verifyManifest(m,key=TRUSTED_RELEASE_KEY){
  if(!ok)throw Error('HOLD: invalid release signature');
  return true;
 }
-async function installUnlocked(m,{baseURL=new URL('./',import.meta.url),key=TRUSTED_RELEASE_KEY,fetcher=fetch,cacheStorage=caches}={}){
+async function installUnlocked(m,{baseURL=new URL('../../',import.meta.url),key=TRUSTED_RELEASE_KEY,fetcher=fetch,cacheStorage=caches}={}){
  await verifyManifest(m,key);
  const active=await cacheStorage.open('frontier-release-control');
  const stateResponse=await active.match('https://frontier.invalid/state');
