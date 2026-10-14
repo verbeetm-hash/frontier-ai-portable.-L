@@ -1,0 +1,8 @@
+V14.9 SHADOW CANDIDATE - 2026-10-14
+Source: /mnt/data/frontier_next/FRONTIER_V14_8_OFFLINE_FIX_TEST.zip
+Artifact: FRONTIER_V14_9_MODEL_RELOAD_TEST.zip
+SHA256: ee80c8105418e7b77bc8446ee9d721274c60c4666d827719385ffa4dce3eaace
+42 archive entries; 41 hash manifest entries verified; CRC PASS; inline JavaScript node --check PASS.
+Changes: V14.9 directory copied from V14.8, isolated SW/cache namespace, enable reload button after successful load, attempt previous model cleanup via exit/dispose when available, conservative offline proof wording; root redirect updated to v14-9.
+Limitations: no actual Android functional test of reload; model disposal API not confirmed; potential memory pressure on repeated reload; offline reboot and inference not tested for V14.9; original V14.8 remains untouched.
+Do not merge to main or mark production. Do not run GitHub Actions.
