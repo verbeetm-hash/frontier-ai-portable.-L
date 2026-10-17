@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {assertControlState,assertMonotonicManifest} from './frontier-v33-state-guard.mjs';
+const assets=['a','b'], h='a'.repeat(64), b='b'.repeat(64);
+const valid=()=>({active:'v3',previous:'v2',sequence:3,assets:{a:h,b},previousAssets:{a:b,b:h}});
+test('valid state accepted',()=>assert.equal(assertControlState(valid(),assets),true));
+test('missing state fields rejected',()=>{const x=valid();delete x.previousAssets;assert.throws(()=>assertControlState(x,assets));});
+test('extra state fields rejected',()=>assert.throws(()=>assertControlState({...valid(),untrusted:1},assets)));
+test('invalid active hash rejected',()=>assert.throws(()=>assertControlState({...valid(),assets:{a:'x',b}},assets)));
+test('previous identical to active rejected',()=>assert.throws(()=>assertControlState({...valid(),previous:'v3'},assets)));
+test('previous null requires null hashes',()=>assert.throws(()=>assertControlState({...valid(),previous:null},assets)));
+test('missing anchor rejected',()=>assert.throws(()=>assertMonotonicManifest({version:'v4',sequence:4},valid(),null)));
+test('older signed release rejected',()=>assert.throws(()=>assertMonotonicManifest({version:'v2',sequence:2},valid(),{maxSequence:3,version:'v3'})));
+test('equal sequence rejected',()=>assert.throws(()=>assertMonotonicManifest({version:'v4',sequence:3},valid(),{maxSequence:3,version:'v3'})));
+test('state rollback rejected',()=>assert.throws(()=>assertMonotonicManifest({version:'v4',sequence:4},{...valid(),sequence:2},{maxSequence:3,version:'v3'})));
+test('fresh sequence accepted',()=>assert.equal(assertMonotonicManifest({version:'v4',sequence:4},valid(),{maxSequence:3,version:'v3'}),true));
