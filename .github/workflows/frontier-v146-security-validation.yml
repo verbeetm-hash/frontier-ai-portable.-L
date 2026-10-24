@@ -1,0 +1,23 @@
+name: Frontier V14.6 Security Validation
+on:
+  push:
+    branches:
+      - validation/security-evidence-20261024
+  pull_request:
+    paths:
+      - 'v14-6/**'
+      - '.github/workflows/frontier-v146-security-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline integrity and regression checks
+        run: node --test v14-6/security-validation.test.mjs
